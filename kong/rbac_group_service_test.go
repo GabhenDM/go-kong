@@ -6,7 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-
 func TestRBACGroupService(T *testing.T) {
 	runWhenEnterprise(T, ">=0.33.0", requiredFeatures{rbac: true})
 	assert := assert.New(T)
@@ -16,8 +15,8 @@ func TestRBACGroupService(T *testing.T) {
 	assert.NotNil(client)
 
 	group := &RBACGroup{
-		Name:      String("testGroupPleaseIgnore"),
-		Comment:   String("testing"),
+		Name:    String("testGroupPleaseIgnore"),
+		Comment: String("testing"),
 	}
 
 	createdGroup, err := client.RBACGroups.Create(defaultCtx, group)
@@ -44,7 +43,7 @@ func TestGroupRoles(T *testing.T) {
 
 	assert.Nil(err)
 	assert.NotNil(client)
-	
+
 	workspace := Workspace{
 		Name: String("test-workspace"),
 	}
@@ -60,27 +59,26 @@ func TestGroupRoles(T *testing.T) {
 	roleB := &RBACRole{
 		Name: String("roleB"),
 	}
-
-	createdRoleA, err := client.RBACRoles.CreateWorkspaceRole(defaultCtx, roleA,createdWorkspace)
+	client.SetWorkspace(*createdWorkspace.Name)
+	createdRoleA, err := client.RBACRoles.Create(defaultCtx, roleA)
 	assert.Nil(err)
-	createdRoleB, err := client.RBACRoles.CreateWorkspaceRole(defaultCtx, roleB,createdWorkspace)
+	createdRoleB, err := client.RBACRoles.Create(defaultCtx, roleB)
 	assert.Nil(err)
 
 	group := &RBACGroup{
-		Name:      String("testGroupPleaseIgnore"),
-		Comment:   String("testing"),
+		Name:    String("testGroupPleaseIgnore"),
+		Comment: String("testing"),
 	}
 
 	createdGroup, err := client.RBACGroups.Create(defaultCtx, group)
 	assert.Nil(err)
 	assert.NotNil(createdGroup)
 
-
-	updatedGroup, err := client.RBACGroups.AddRole(defaultCtx, createdGroup.ID, createdRoleA, createdWorkspace )
+	updatedGroup, err := client.RBACGroups.AddRole(defaultCtx, createdGroup.ID, createdRoleA, createdWorkspace)
 	assert.Nil(err)
 	assert.NotNil(updatedGroup)
 
-	updatedGroup, err = client.RBACGroups.AddRole(defaultCtx, createdGroup.ID, createdRoleB, createdWorkspace )
+	updatedGroup, err = client.RBACGroups.AddRole(defaultCtx, createdGroup.ID, createdRoleB, createdWorkspace)
 	assert.Nil(err)
 	assert.NotNil(updatedGroup)
 

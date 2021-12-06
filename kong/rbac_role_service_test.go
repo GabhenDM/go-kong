@@ -167,33 +167,3 @@ func compareRBACRoles(expected, actual []*RBACRole) bool {
 
 	return (compareSlices(expectedNames, actualNames))
 }
-
-func TestRBACWorkspaceRole(T *testing.T) {
-	runWhenEnterprise(T, ">=0.33.0", requiredFeatures{rbac: true})
-	assert := assert.New(T)
-
-	client, err := NewTestClient(nil, nil)
-	assert.Nil(err)
-	assert.NotNil(client)
-
-	workspace := Workspace{
-		Name: String("test-workspace"),
-	}
-
-	createdWorkspace, err := client.Workspaces.Create(defaultCtx, &workspace)
-
-	assert.Nil(err)
-	assert.NotNil(createdWorkspace)
-
-	role := &RBACRole{
-		Name: String("roleA"),
-	}
-
-	createdRole, err := client.RBACRoles.CreateWorkspaceRole(defaultCtx, role, createdWorkspace)
-	assert.Nil(err)
-	assert.NotNil(createdRole)
-
-	role, err = client.RBACRoles.GetWorkspaceRole(defaultCtx, createdRole.ID, createdWorkspace)
-	assert.Nil(err)
-	assert.NotNil(role)
-}
