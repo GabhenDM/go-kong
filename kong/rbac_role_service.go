@@ -10,8 +10,12 @@ import (
 type AbstractRBACRoleService interface {
 	// Create creates a Role in Kong.
 	Create(ctx context.Context, role *RBACRole) (*RBACRole, error)
+	// CreateWorkspaceRole creates a workspace scoped Role in Kong.
+	CreateWorkspaceRole(ctx context.Context,role *RBACRole, workspace *Workspace) (*RBACRole, error) 
 	// Get fetches a Role in Kong.
 	Get(ctx context.Context, nameOrID *string) (*RBACRole, error)
+	// Get fetches a Role in Kong.
+	GetWorkspaceRole(ctx context.Context, nameOrID *string, workspace *Workspace) (*RBACRole, error)
 	// Update updates a Role in Kong.
 	Update(ctx context.Context, role *RBACRole) (*RBACRole, error)
 	// Delete deletes a Role in Kong
@@ -52,6 +56,33 @@ func (s *RBACRoleService) Create(ctx context.Context,
 	return &createdRole, nil
 }
 
+// Creates a workspace scoped Role in Kong.
+func (s *RBACRoleService) CreateWorkspaceRole(ctx context.Context,
+	role *RBACRole, workspace *Workspace) (*RBACRole, error) {
+
+	if role == nil {
+		return nil, fmt.Errorf("cannot create a nil role")
+	}
+
+	endpoint := fmt.Sprintf("/%v/rbac/roles", *workspace.Name)
+	method := "POST"
+	if role.ID != nil {
+		endpoint = endpoint + "/" + *role.ID
+		method = "PUT"
+	}
+	req, err := s.client.NewRequest(method, endpoint, nil, role)
+	if err != nil {
+		return nil, err
+	}
+
+	var createdRole RBACRole
+	_, err = s.client.Do(ctx, req, &createdRole)
+	if err != nil {
+		return nil, err
+	}
+	return &createdRole, nil
+}
+
 // Get fetches a Role in Kong.
 func (s *RBACRoleService) Get(ctx context.Context,
 	nameOrID *string) (*RBACRole, error) {
@@ -61,6 +92,27 @@ func (s *RBACRoleService) Get(ctx context.Context,
 	}
 
 	endpoint := fmt.Sprintf("/rbac/roles/%v", *nameOrID)
+	req, err := s.client.NewRequest("GET", endpoint, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var Role RBACRole
+	_, err = s.client.Do(ctx, req, &Role)
+	if err != nil {
+		return nil, err
+	}
+	return &Role, nil
+}
+// Get a Workspace scoped Role
+func (s *RBACRoleService) GetWorkspaceRole(ctx context.Context,
+	nameOrID *string, workspace *Workspace) (*RBACRole, error) {
+
+	if isEmptyString(nameOrID) {
+		return nil, fmt.Errorf("nameOrID cannot be nil for Get operation")
+	}
+
+	endpoint := fmt.Sprintf("/%v/rbac/roles/%v", *workspace.Name, *nameOrID)
 	req, err := s.client.NewRequest("GET", endpoint, nil, nil)
 	if err != nil {
 		return nil, err

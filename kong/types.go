@@ -311,6 +311,23 @@ type RBACUser struct {
 	UserTokenIdent *string `json:"user_token_ident,omitempty" yaml:"user_token_ident,omitempty"`
 }
 
+// RBACGroup represents a RBAC group in Kong Enterprise
+type RBACGroup struct {
+	CreatedAt      *int    `json:"created_at,omitempty" yaml:"created_at,omitempty"`
+	Comment        *string `json:"comment,omitempty" yaml:"comment,omitempty"`
+	ID             *string `json:"id,omitempty" yaml:"id,omitempty"`
+	Name           *string `json:"name,omitempty" yaml:"name,omitempty"`
+}
+
+// RBACGroupRole represents a RBAC group role association in Kong Enterprise
+type RBACGroupRole struct {
+	Group RBACGroup `json:"group,omitempty" yaml:"group,omitempty"`
+	Role RBACRole 	`json:"rbac_role,omitempty" yaml:"rbac_role,omitempty"`
+	Workspace Workspace `json:"workspace,omitempty" yaml:"workspace,omitempty"`
+}
+
+
+
 // WorkspaceEntity represents a WorkspaceEntity in Kong
 // +k8s:deepcopy-gen=true
 type WorkspaceEntity struct {
