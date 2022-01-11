@@ -1,6 +1,8 @@
 # Table of Contents
 
-- [v0.23.0](#v0240)
+- [v0.25.1](#v0251)
+- [v0.25.0](#v0250)
+- [v0.24.0](#v0240)
 - [v0.23.0](#v0230)
 - [v0.22.0](#v0220)
 - [v0.21.0](#v0210)
@@ -28,6 +30,21 @@
 - [0.3.0](#030)
 - [0.2.0](#020)
 - [0.1.0](#010)
+
+## [v0.25.1]
+
+> Release date: 2021/12/08
+
+v0.25.1 reverts the k8s.io/code-generator version originally used in v0.25.0 to
+avoid an unwanted upgrade of its github.com/go-logr/logr dependency.
+
+## [v0.25.0]
+
+> Release date: 2021/12/08
+
+- Healthcheck types now include CRD validation annotations for
+  [Kubebuilder](https://book.kubebuilder.io/reference/markers/crd-validation.html).
+  [#104](https://github.com/Kong/go-kong/pull/104)
 
 ## [v0.24.0]
 
@@ -472,6 +489,8 @@ authentication credentials in Kong.
   releases of Kong since every release of Kong is introducing breaking changes
   to the Admin API.
 
+[v0.25.1]: https://github.com/Kong/go-kong/compare/v0.24.0...v0.25.1
+[v0.25.0]: https://github.com/Kong/go-kong/compare/v0.24.0...v0.25.0
 [v0.24.0]: https://github.com/Kong/go-kong/compare/v0.23.0...v0.24.0
 [v0.23.0]: https://github.com/Kong/go-kong/compare/v0.22.0...v0.23.0
 [v0.22.0]: https://github.com/Kong/go-kong/compare/v0.21.0...v0.22.0
